@@ -13,7 +13,11 @@ Before running the simulation, make sure you have:
 
 ## Setup
 
-Replace `{ros2_workspace_dir}` with the path to your ROS 2 workspace.
+Replace `{ros2_workspace_dir}` with the path to your ROS 2 workspace. If there isn't one, create one as 
+```bash
+mkdir -p ~/ros2_ws/src
+```
+Use ~/ros2_ws as the {ros2_workspace_dir}
 
 ```bash
 cd {ros2_workspace_dir}/src
