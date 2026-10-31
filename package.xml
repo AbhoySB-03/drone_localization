@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>radar_drone_simulation</name>
+  <version>0.1.0</version>
+  <description>Gazebo Sim radar sensor plugin (polar range/azimuth/elevation) with ROS 2 launch and bridge</description>
+  <maintainer email="you@example.com">Your Name</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- Gazebo libraries (ignition-gazebo6 / gz-sim*, plugin, msgs, transport)
+       are system packages found by CMake; they are installed with Gazebo itself. -->
+
+  <exec_depend>ros2launch</exec_depend>
+  <exec_depend>ros_gz_bridge</exec_depend>
+  <exec_depend>ros_gz_interfaces</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
+
+  <depend>ignition-gazebo6</depend>
+  <depend>ignition-plugin1</depend>
+  <depend>ignition-transport11</depend>
+  <depend>ignition-msgs8</depend>
+  <depend>ignition-math6</depend>
+  
+  <depend>rclcpp</depend>
+  <depend>rclpy</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>nlohmann_json</depend>
+  <depend>ament_index_cpp</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

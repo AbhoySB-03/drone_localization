@@ -1,0 +1,133 @@
+<?xml version="1.0" ?>
+<!--
+  Radar world for the radar_drone_simulation ROS 2 package.
+  Launch with:  ros2 launch radar_drone_simulation radar_sim.launch.py
+
+  The M100 is included from radar_drone_simulation/models/M100 (model.sdf + meshes/).
+  Its model name here ("M100") must match <target> in the radar plugin.
+
+  Fortress system plugin names are used. For Garden/Harmonic/Ionic replace
+  "ignition-gazebo-xxx-system" with "gz-sim-xxx-system" and the
+  "ignition::gazebo::systems::" prefix with "gz::sim::systems::".
+-->
+<sdf version="1.8">
+  <world name="radar_world">
+    <scene>
+      <ambient>0.6 0.6 0.6 1</ambient>
+      <background>0.7 0.85 1.0 1</background>
+      <shadows>true</shadows>
+    </scene>
+
+    <plugin filename="ignition-gazebo-physics-system" name="ignition::gazebo::systems::Physics"/>
+    <plugin filename="ignition-gazebo-user-commands-system" name="ignition::gazebo::systems::UserCommands"/>
+    <plugin filename="ignition-gazebo-scene-broadcaster-system" name="ignition::gazebo::systems::SceneBroadcaster"/>
+
+
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+    <plugin filename="gz-sim-altimeter-system" name="gz::sim::systems::Altimeter"/>
+    <plugin filename="gz-sim-navsat-system" name="gz::sim::systems::NavSat"/>
+    <plugin filename="gz-sim-air-pressure-system" name="gz::sim::systems::AirPressure"/>
+    <plugin filename="gz-sim-magnetometer-system" name="gz::sim::systems::Magnetometer"/>
+
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>28.6139</latitude_deg>
+      <longitude_deg>77.2090</longitude_deg>
+      <elevation>216</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+
+    <light type="directional" name="sun">
+      <pose>0 0 20 0 0 0</pose>
+      <cast_shadows>true</cast_shadows>
+      <diffuse>0.9 0.9 0.9 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="c"><geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry></collision>
+        <visual name="v">
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+          <material><ambient>1 0.97 0.65 1</ambient><diffuse>1 0.97 0.65 1</diffuse><specular>0.2 0.2 0.2 1</specular></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Your M100 drone -->
+    <include>
+      <uri>model://CERB_DRONE</uri>
+      <name>drone</name>
+      <pose>0 0 0.1 0 0 0</pose>
+    </include>
+
+    <!-- Static radar station: white mast, red antenna panel facing +X -->
+    <model name="FMCW_Radar">
+      <static>true</static>
+      <pose>8 6 0 0 0 0</pose>
+
+      <!-- Mounting Pole (Height: 2m, Radius: 1.8cm, Greyish-White) -->
+      <link name="pole_link">
+        <pose>0 0 1.0 0 0 0</pose>
+        <collision name="pole_collision">
+          <geometry>
+            <cylinder>
+              <radius>0.018</radius>
+              <length>2.0</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="pole_visual">
+          <geometry>
+            <cylinder>
+              <radius>0.018</radius>
+              <length>2.0</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.82 0.82 0.84 1.0</ambient>
+            <diffuse>0.82 0.82 0.84 1.0</diffuse>
+            <specular>0.2 0.2 0.2 1.0</specular>
+          </material>
+        </visual>
+      </link>
+
+      <!-- Radar Sensor Body (66 x 67.5 x 16.5 mm, Black) -->
+      <link name="radar_enclosure_link">
+        <!-- Positioned directly on top of the 2m pole: 2.0 + (0.0165 / 2) = 2.00825 m -->
+        <pose>0 0 2.03375 0 0 0</pose>
+        <collision name="radar_collision">
+          <geometry>
+            <box>
+              <size>0.0165 0.066 0.0675</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="radar_visual">
+          <geometry>
+            <box>
+              <size>0.0165 0.066 0.0675</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.08 0.08 0.08 1.0</ambient>
+            <diffuse>0.08 0.08 0.08 1.0</diffuse>
+            <specular>0.1 0.1 0.1 1.0</specular>
+          </material>
+        </visual>
+        </link>
+
+      <plugin filename="RadarPlugin" name="radar::RadarPlugin">
+        <target>drone</target>                   <!-- model (or link) to track -->
+        <topic>/radar/polar</topic>
+        <update_rate>30</update_rate>           <!-- Hz, simulation time -->
+        <radar_pose>0.0 0 2.0 0 0 0</radar_pose> <!-- x y z roll pitch yaw, relative to this model; boresight = +X -->
+      </plugin>
+    </model>
+  </world>
+</sdf>
