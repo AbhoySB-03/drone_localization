@@ -25,8 +25,10 @@ git clone https://github.com/AbhoySB-03/drone_localization.git radar_drone_simul
 cd {ros2_workspace_dir}
 colcon build --packages-select radar_drone_simulation
 source install/setup.bash
-
+```
 ## Launch the simulation
+The following command will launch the Gazebo simulation window along with access to all the ros2 topics.
 ```bash
 source {ros2_workspace_dir}/install/setup.bash
 ros2 launch radar_drone_simulation radar_sim.launch.py
+```
