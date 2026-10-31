@@ -13,11 +13,7 @@ Before running the simulation, make sure you have:
 
 ## Setup
 
-Replace `{ros2_workspace_dir}` with the path to your ROS 2 workspace. If there isn't one, create one as 
-```bash
-mkdir -p ~/ros2_ws/src
-```
-Use ~/ros2_ws as the {ros2_workspace_dir}
+Replace `{ros2_workspace_dir}` with the path to your ROS 2 workspace. 
 
 ```bash
 cd {ros2_workspace_dir}/src
@@ -26,6 +22,11 @@ cd {ros2_workspace_dir}
 colcon build --packages-select radar_drone_simulation
 source install/setup.bash
 ```
+If there isn't a ros2 workspace already, then create one as 
+```bash
+mkdir -p ~/ros2_ws/src
+```
+Use ~/ros2_ws instead of the {ros2_workspace_dir}
 ## Launch the simulation
 The following command will launch the Gazebo simulation window along with access to all the ros2 topics.
 ```bash
